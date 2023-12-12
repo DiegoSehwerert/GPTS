@@ -1,23 +1,30 @@
 class UserSugestions extends HTMLElement {
 
 
-    constructor() {
+  constructor() {
 
-        super()
+    super()
 
-        this.shadow = this.attachShadow({ mode: 'open' })
+    this.shadow = this.attachShadow({ mode: 'open' })
 
-    }
+  }
 
 
-    connectedCallback() {
-        this.render();
+  connectedCallback() {
+    this.render();
 
-    }
+    document.addEventListener("clean-chat", (event => {
+      this.cleanSuggestions();
+    }))
+    document.addEventListener("start-new-chat", (event => {
+      this.render();
+    }))
 
-    render() {
+  }
 
-      this.shadow.innerHTML =
+  render() {
+
+    this.shadow.innerHTML =
       `
       <style>
       .examples{
@@ -183,8 +190,11 @@ class UserSugestions extends HTMLElement {
           </article>
         </section>
       `
-    }
-     
+
+  }
+  cleanSuggestions(){
+    this.shadow.innerHTML="";
+  }
 }
 
 customElements.define('user-sugestions-component', UserSugestions);

@@ -12,6 +12,14 @@ class Conversation extends HTMLElement {
 
     connectedCallback() {
         this.render();
+        
+        document.addEventListener("clean-chat", (event => {
+          this.cleanSuggestions();
+        }))
+
+        document.addEventListener("start-new-chat", (event => {
+          this.render();
+        }))
 
     }
 
@@ -73,7 +81,9 @@ class Conversation extends HTMLElement {
     </div>
       `
     }
-     
+    cleanSuggestions(){
+      this.shadow.innerHTML="";
+    }
 }
 
 customElements.define('conversation-component', Conversation);

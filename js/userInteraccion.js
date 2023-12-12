@@ -1,38 +1,36 @@
 class UserInteraction extends HTMLElement {
 
 
-    constructor() {
+  constructor() {
 
-        super()
+    super()
 
-        this.shadow = this.attachShadow({ mode: 'open' })
+    this.shadow = this.attachShadow({ mode: 'open' })
 
-    }
+  }
 
 
-    connectedCallback() {
-        this.render();
+  connectedCallback() {
+    this.render();
 
-        const formMessage = this.shadow.querySelector('.form-element textarea');
-        formMessage.addEventListener('input', this.handleTextareaInput.bind(this));
-    }
+    document.addEventListener("start-new-chat", (event => {
+      this.render();
+    }))
 
-    handleTextareaInput(event) {
-      const inputValue = event.target.value.trim();
-      const sendButton = this.shadow.querySelector('.send-button');
-  
-      if (inputValue !== "") {
-        sendButton.classList.add('active');
-      } else {
-        sendButton.classList.remove('active');
-      }
-    }
+  }
 
-    render() {
 
-      this.shadow.innerHTML =
-            `
+
+  render() {
+
+    this.shadow.innerHTML =
+      `
       <style>
+
+      :host{
+        width: 100%;
+      }
+
       .message-input{
         width: 100%;
       }
@@ -92,6 +90,11 @@ class UserInteraction extends HTMLElement {
         display: flex;
         padding: 0.1rem 0.2rem;
       }
+
+      .send-button{
+        pointer-events: none;
+        cursor: not-allowed;
+      }
       
       .message-input .send-button svg{
         color:hsl(0, 0%, 0%, 0.3);
@@ -101,6 +104,7 @@ class UserInteraction extends HTMLElement {
       .message-input .send-button.active button{
         background-color: rgb(255, 255, 255);
         cursor: pointer;
+        pointer-events: auto;
       }
       
       .message-input .send-button.active svg{
@@ -164,8 +168,29 @@ class UserInteraction extends HTMLElement {
       </form>
       </section>
       `
-    }
-     
+    let textArea = this.shadow.querySelector(".form-element");
+    let sendButton = this.shadow.querySelector(".send-button");
+
+    textArea.addEventListener("input", (event) => {
+
+      if (event.target.tagName === 'TEXTAREA') {
+        event.preventDefault();
+
+        if (event.target.value  == "") {
+          sendButton.classList.remove("active");
+        } else {
+          sendButton.classList.add("active");
+        }
+      }
+    })
+
+    sendButton.addEventListener("click", (event) => {
+      event.preventDefault();
+      const customEvent = new CustomEvent('clean-chat')
+      document.dispatchEvent(customEvent);
+      this.render();
+    })
+  }
 }
 
 customElements.define('user-interaction-component', UserInteraction);

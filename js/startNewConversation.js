@@ -12,7 +12,6 @@ class StartConversation extends HTMLElement {
 
     connectedCallback() {
         this.render();
-
     }
 
     render() {
@@ -127,6 +126,12 @@ class StartConversation extends HTMLElement {
       </div>
     </section>
       `
+      const newChatButton = this.shadow.querySelector('.new-conversation');
+      newChatButton.addEventListener("click",(event) => {
+        event.preventDefault();
+        const customEvent = new CustomEvent('start-new-chat');
+        document.dispatchEvent(customEvent);
+      })
     }
      
 }

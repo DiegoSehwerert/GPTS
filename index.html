@@ -18,14 +18,14 @@
     <script type="module" src="/js/app.js"></script>
   </head>
   <body>
-    <aside>
-      <start-conversation-component></start-conversation-component>
-      <hystory-component></hystory-component>
-      <user-config></user-config>
-    </aside>
+    <aside-component>
+      <start-conversation-component slot="new-conversation"></start-conversation-component>
+      <hystory-component slot="hystory-record"></hystory-component>
+      <user-config slot="user-configuration"></user-config>
+    </aside-component>
     <main>
       <conversation-component></conversation-component>
-      <div class="user-interaction">
+      <div class="user-section">
         <user-sugestions-component></user-sugestions-component>
         <user-interaction-component></user-interaction-component>
       </div>
