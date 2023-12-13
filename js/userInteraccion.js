@@ -173,7 +173,7 @@ class UserInteraction extends HTMLElement {
       if (event.target.tagName === 'TEXTAREA') {
         event.preventDefault();
 
-        if (event.target.value  == "") {
+        if (event.target.value == "") {
           sendButton.classList.remove("active");
           button.disabled = true;
         } else {
@@ -184,24 +184,46 @@ class UserInteraction extends HTMLElement {
     });
 
     sendButton.addEventListener("click", (event) => {
+
       event.preventDefault();
+
       const customEventLetVoidChat = new CustomEvent('clean-chat')
       document.dispatchEvent(customEventLetVoidChat);
+
       const customEventDisplayConversation = new CustomEvent('display-conversation')
       document.dispatchEvent(customEventDisplayConversation);
-      let textAreaValue=textArea.value;
-      const customEventTextAreaValue = new CustomEvent('text-area-value', { 
-        detail: textAreaValue
-       });
+
+      let textAreaValue = textArea.value;
+      const customEventTextAreaValue = new CustomEvent('text-area-value', {
+        detail: {
+          myVar: textAreaValue
+        },
+      });
       document.dispatchEvent(customEventTextAreaValue);
+
       this.render();
     });
 
     textArea.addEventListener("keydown", (event) => {
       if (event.key === "Enter" && !event.shiftKey) {
+        
         event.preventDefault();
+        
+
         const customEventLetVoidChat = new CustomEvent('clean-chat')
         document.dispatchEvent(customEventLetVoidChat);
+
+        const customEventDisplayConversation = new CustomEvent('display-conversation')
+        document.dispatchEvent(customEventDisplayConversation);
+
+        let textAreaValue = textArea.value;
+        const customEventTextAreaValue = new CustomEvent('text-area-value', {
+          detail: {
+            myVar: textAreaValue
+          },
+        });
+        document.dispatchEvent(customEventTextAreaValue);
+
         this.render();
       }
     });
