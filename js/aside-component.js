@@ -68,6 +68,10 @@ class AsideComponent extends HTMLElement {
           height:1rem;
         }
 
+        .new-chat-button button:hover {
+          cursor: pointer;
+        }
+
         .new-chat-button.active{
           display:flex;
           width:1rem;

@@ -6,7 +6,6 @@ class UserInteraction extends HTMLElement {
     super()
 
     this.shadow = this.attachShadow({ mode: 'open' })
-
   }
 
 
@@ -158,7 +157,7 @@ class UserInteraction extends HTMLElement {
           <textarea placeholder="Message ChatGPT..."></textarea>
         </div>
         <div class="send-button">
-          <button>
+          <button disabled=true>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-white dark:text-black">
               <path d="M7 11L12 6L17 11M12 18V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
             </svg>            
@@ -168,8 +167,9 @@ class UserInteraction extends HTMLElement {
       </form>
       </section>
       `
-    let textArea = this.shadow.querySelector(".form-element");
+    let textArea = this.shadow.querySelector(".form-element textarea");
     let sendButton = this.shadow.querySelector(".send-button");
+    let button = this.shadow.querySelector(".send-button button");
 
     textArea.addEventListener("input", (event) => {
 
@@ -178,18 +178,31 @@ class UserInteraction extends HTMLElement {
 
         if (event.target.value  == "") {
           sendButton.classList.remove("active");
+          button.disabled = true;
         } else {
           sendButton.classList.add("active");
+          button.disabled = false;
         }
       }
-    })
+    });
 
     sendButton.addEventListener("click", (event) => {
       event.preventDefault();
       const customEvent = new CustomEvent('clean-chat')
       document.dispatchEvent(customEvent);
       this.render();
-    })
+    });
+
+    textArea.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        const customEvent = new CustomEvent('clean-chat')
+        document.dispatchEvent(customEvent);
+        this.render();
+      }
+    });
+
+    textArea.focus();
   }
 }
 
