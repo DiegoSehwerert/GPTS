@@ -20,12 +20,12 @@ class AsideComponent extends HTMLElement {
           max-width: 235px;
           min-width: 235px;
           height: 100%;
-          transition: margin-left 0.3s;
+          transition: margin-left 0.6s;
         }
 
         .aside.active{
           margin-left: -235px;
-          transition: margin-left 0.3s;
+          transition: margin-left 0.6s;
         }
 
         .hide-button{
@@ -33,8 +33,9 @@ class AsideComponent extends HTMLElement {
           position: absolute;
           left: 245px;
           bottom: 50%;
-          transition: left 0.3s;
+          transition: all 0.6s;
           z-index: 2;
+          transform: rotate(0deg);
         }
 
         .hide-button button{
@@ -51,6 +52,7 @@ class AsideComponent extends HTMLElement {
           position: absolute;
           left: 10px;
           bottom: 50%;
+          transform: rotate(720deg);
         }
 
         .new-chat-button{

@@ -12,7 +12,6 @@ class UserConfig extends HTMLElement {
 
     connectedCallback() {
         this.render();
-
     }
 
     render() {

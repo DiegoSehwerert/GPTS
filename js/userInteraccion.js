@@ -6,19 +6,16 @@ class UserInteraction extends HTMLElement {
     super()
 
     this.shadow = this.attachShadow({ mode: 'open' })
+
+    document.addEventListener("start-new-chat", (event => {
+      this.render();
+    }))
   }
 
 
   connectedCallback() {
     this.render();
-
-    document.addEventListener("start-new-chat", (event => {
-      this.render();
-    }))
-
   }
-
-
 
   render() {
 
@@ -188,16 +185,23 @@ class UserInteraction extends HTMLElement {
 
     sendButton.addEventListener("click", (event) => {
       event.preventDefault();
-      const customEvent = new CustomEvent('clean-chat')
-      document.dispatchEvent(customEvent);
+      const customEventLetVoidChat = new CustomEvent('clean-chat')
+      document.dispatchEvent(customEventLetVoidChat);
+      const customEventDisplayConversation = new CustomEvent('display-conversation')
+      document.dispatchEvent(customEventDisplayConversation);
+      let textAreaValue=textArea.value;
+      const customEventTextAreaValue = new CustomEvent('text-area-value', { 
+        detail: textAreaValue
+       });
+      document.dispatchEvent(customEventTextAreaValue);
       this.render();
     });
 
     textArea.addEventListener("keydown", (event) => {
       if (event.key === "Enter" && !event.shiftKey) {
         event.preventDefault();
-        const customEvent = new CustomEvent('clean-chat')
-        document.dispatchEvent(customEvent);
+        const customEventLetVoidChat = new CustomEvent('clean-chat')
+        document.dispatchEvent(customEventLetVoidChat);
         this.render();
       }
     });

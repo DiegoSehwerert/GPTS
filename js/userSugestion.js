@@ -7,19 +7,18 @@ class UserSugestions extends HTMLElement {
 
     this.shadow = this.attachShadow({ mode: 'open' })
 
+    document.addEventListener("clean-chat", (event => {
+      this.cleanSuggestions();
+    }))
+
+    document.addEventListener("start-new-chat", (event => {
+      this.render();
+    }))
   }
 
 
   connectedCallback() {
     this.render();
-
-    document.addEventListener("clean-chat", (event => {
-      this.cleanSuggestions();
-    }))
-    document.addEventListener("start-new-chat", (event => {
-      this.render();
-    }))
-
   }
 
   render() {

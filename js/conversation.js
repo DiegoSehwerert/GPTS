@@ -7,20 +7,24 @@ class Conversation extends HTMLElement {
 
         this.shadow = this.attachShadow({ mode: 'open' })
 
+        document.addEventListener("display-conversation", this.handleConversation.bind(this));
+
+        document.addEventListener("clean-chat", (event => {
+          this.cleanSuggestions();
+        }));
+
+        document.addEventListener("start-new-chat", (event => {
+          this.render();
+        }));
+
+        document.addEventListener("text-area-value", (event => {
+           this.textAreaValueRecieved = event.detail;
+        }));
     }
 
 
     connectedCallback() {
         this.render();
-        
-        document.addEventListener("clean-chat", (event => {
-          this.cleanSuggestions();
-        }))
-
-        document.addEventListener("start-new-chat", (event => {
-          this.render();
-        }))
-
     }
 
     render() {
@@ -81,6 +85,15 @@ class Conversation extends HTMLElement {
     </div>
       `
     }
+    handleConversation(){
+      this.userPromt();
+      this.response;
+    }
+
+    userPromt(){
+      alert("Valor del textarea:" + this.textAreaValueRecieved);
+    }
+
     cleanSuggestions(){
       this.shadow.innerHTML="";
     }

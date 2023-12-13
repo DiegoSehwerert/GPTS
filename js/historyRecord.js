@@ -12,7 +12,6 @@ class Hystory extends HTMLElement {
 
     connectedCallback() {
         this.render();
-
     }
 
     render() {
