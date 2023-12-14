@@ -23,10 +23,16 @@ class Conversation extends HTMLElement {
     this.modelResponse();
   }
 
+  
+
   handleCleanChat(){
     this.shadow.innerHTML = 
     /*html*/`
     <style>
+    p{
+      color: white;
+    }
+
     .chat-container {
       height: 90vh; /* Establece la altura máxima al 75% de la pantalla */
       overflow-y: auto; /* Agrega una barra de desplazamiento vertical si es necesario */
@@ -49,12 +55,22 @@ class Conversation extends HTMLElement {
      .prompts {
       width: 100%;
     }
+    .prompt, .model-response {
+      display: flex;
+      align-items: flex-start; /* Alinea elementos al inicio del contenedor */
+      margin: 3rem 0;
+    }
 
     .user-logo {
       width: 2rem; 
       height: 2rem;
       border-radius: 50%;
       overflow: hidden;
+    }
+
+    .user-name, .model-name {
+      color: white;
+      margin-left: 1rem; /* Agrega un espacio entre el icono y el nombre */
     }
 
     .prompt, .model-response {
@@ -68,7 +84,15 @@ class Conversation extends HTMLElement {
       height: 2rem;
       border-radius: 50%;
       overflow: hidden;
-    }    
+    }
+
+    .model-response p {
+      background-color: #2e2e2e; /* Color de fondo de la burbuja de respuesta */
+      padding: 1rem; /* Espaciado interno de la burbuja de respuesta */
+      border-radius: 8px; /* Bordes redondeados */
+      margin-left: 1rem; /* Agrega espacio entre el nombre y la burbuja de respuesta */
+    }
+    
     </style>
     <div class="chat-container">
       <div class="prompts">
@@ -148,6 +172,7 @@ class Conversation extends HTMLElement {
     promptContainer.appendChild(userLogo)
 
     const userName = document.createElement('div')
+    userName.classList.add('user-name')
     userName.textContent = "Tu"
     promptContainer.appendChild(userName)
 
@@ -161,7 +186,7 @@ class Conversation extends HTMLElement {
   modelResponse() {
     const promptsContainer = this.shadow.querySelector('.prompts');
     const promptContainer = document.createElement('div');
-    promptContainer.classList.add('.model-response');
+    promptContainer.classList.add('model-response');
 
     const modelLogo = document.createElement('img');
     modelLogo.src = "./images/chatgpt-icon.webp";
@@ -170,6 +195,7 @@ class Conversation extends HTMLElement {
     promptContainer.appendChild(modelLogo);
 
     const modelName = document.createElement('div');
+    modelName.classList.add('model-name')
     modelName.textContent = "ñatGPT";
     promptContainer.appendChild(modelName);
 
