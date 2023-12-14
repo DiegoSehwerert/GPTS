@@ -1,17 +1,13 @@
 class UserInteraction extends HTMLElement {
 
-
   constructor() {
 
     super()
-
     this.shadow = this.attachShadow({ mode: 'open' })
+    this.startChat = true
 
-    document.addEventListener("start-new-chat", (event => {
-      this.render();
-    }))
+    document.addEventListener("start-new-chat", this.connectedCallback.bind(this));
   }
-
 
   connectedCallback() {
     this.render();
@@ -164,71 +160,49 @@ class UserInteraction extends HTMLElement {
       </form>
       </section>
       `
+    
     let textArea = this.shadow.querySelector(".form-element textarea");
     let sendButton = this.shadow.querySelector(".send-button");
     let button = this.shadow.querySelector(".send-button button");
 
+    textArea.focus();
+
     textArea.addEventListener("input", (event) => {
-
-      if (event.target.tagName === 'TEXTAREA') {
-        event.preventDefault();
-
-        if (event.target.value == "") {
-          sendButton.classList.remove("active");
-          button.disabled = true;
-        } else {
-          sendButton.classList.add("active");
-          button.disabled = false;
-        }
+      if (event.target.value == "") {
+        sendButton.classList.remove("active");
+        button.disabled = true;
+      } else {
+        sendButton.classList.add("active");
+        button.disabled = false;
       }
     });
 
     sendButton.addEventListener("click", (event) => {
-
       event.preventDefault();
-
-      const customEventLetVoidChat = new CustomEvent('clean-chat')
-      document.dispatchEvent(customEventLetVoidChat);
-
-      const customEventDisplayConversation = new CustomEvent('display-conversation')
-      document.dispatchEvent(customEventDisplayConversation);
-
-      let textAreaValue = textArea.value;
-      const customEventTextAreaValue = new CustomEvent('text-area-value', {
-        detail: {
-          myVar: textAreaValue
-        },
-      });
-      document.dispatchEvent(customEventTextAreaValue);
-
-      this.render();
+      this.sendButton();
     });
 
     textArea.addEventListener("keydown", (event) => {
       if (event.key === "Enter" && !event.shiftKey) {
-        
-        event.preventDefault();
-        
-
-        const customEventLetVoidChat = new CustomEvent('clean-chat')
-        document.dispatchEvent(customEventLetVoidChat);
-
-        const customEventDisplayConversation = new CustomEvent('display-conversation')
-        document.dispatchEvent(customEventDisplayConversation);
-
-        let textAreaValue = textArea.value;
-        const customEventTextAreaValue = new CustomEvent('text-area-value', {
-          detail: {
-            myVar: textAreaValue
-          },
-        });
-        document.dispatchEvent(customEventTextAreaValue);
-
-        this.render();
+        this.sendButton();
       }
     });
+  }
 
-    textArea.focus();
+  sendButton(){
+     
+    if (this.startChat){
+      document.dispatchEvent(new CustomEvent('clean-chat'));
+      this.startChat = false;
+    }
+
+    document.dispatchEvent(new CustomEvent('new-prompt', {
+      detail: {
+        prompt: this.shadow.querySelector("textarea").value
+      }
+    }));
+
+    this.render();
   }
 }
 
