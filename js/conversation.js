@@ -29,70 +29,75 @@ class Conversation extends HTMLElement {
     this.shadow.innerHTML = 
     /*html*/`
     <style>
-    p{
-      color: white;
-    }
 
-    .chat-container {
-      height: 90vh; /* Establece la altura máxima al 75% de la pantalla */
-      overflow-y: auto; /* Agrega una barra de desplazamiento vertical si es necesario */
-      scrollbar-color: #343541 #f0f0f0;
-    }
-    /* Estilos personalizados para la barra de desplazamiento */
-    .chat-container::-webkit-scrollbar {
-      width: 8px;
-    }
+      :host{
+        width: 100%;
+      }
+      
+      p{
+        color: white;
+      }
 
-    .chat-container::-webkit-scrollbar-thumb {
-      background-color: #f0f0f0; /* Color de fondo de la barra de desplazamiento */
-      border-radius: 4px;
-    }
+      .chat-container {
+        height: 90vh; /* Establece la altura máxima al 75% de la pantalla */
+        overflow-y: auto; /* Agrega una barra de desplazamiento vertical si es necesario */
+        scrollbar-color: none;
+      }
+      /* Estilos personalizados para la barra de desplazamiento */
+      .chat-container::-webkit-scrollbar {
+        width: 0px;
+      }
 
-    .chat-container::-webkit-scrollbar-track {
-      background-color: #343541;
-    }
+      .chat-container::-webkit-scrollbar-thumb {
+        
+      }
 
-     .prompts {
-      width: 100%;
-    }
-    .prompt, .model-response {
-      display: flex;
-      align-items: flex-start; /* Alinea elementos al inicio del contenedor */
-      margin: 3rem 0;
-    }
+      .prompts {
+        width: 100%;
+      }
+      
+      .prompt, .model-response {
+        align-items: flex-end; /* Alinea elementos al inicio del contenedor */
+        display: flex;
+        flex-direction:column;
+        margin: 3rem 0;
+      }
+      .prompt p{
+        width:100%;
+      }
 
-    .user-logo {
-      width: 2rem; 
-      height: 2rem;
-      border-radius: 50%;
-      overflow: hidden;
-    }
+      .user, .model{
+        align-items: center;
+        box-sizing: border-box;
+        display:flex;
+        gap: 1rem;
+        justify-content:flex-start;
+        width:100%;
+      }
+      .userPrompt{
+        width: 92%;
+      }
+      .userPrompt p {
+       
+      }
 
-    .user-name, .model-name {
-      color: white;
-      margin-left: 1rem; /* Agrega un espacio entre el icono y el nombre */
-    }
+      .user-logo, .model-logo{
+        width: 2rem; 
+        border-radius: 50%;
+      }
 
-    .prompt, .model-response {
-      display: flex;
-      align-items: center;
-      margin: 3rem 0;
-    }
+      .user-name, .model-name {
+        color: white;
+      }
 
-    .model-logo {
-      width: 2rem;
-      height: 2rem;
-      border-radius: 50%;
-      overflow: hidden;
-    }
+      .model-response {
+        width: 100%;
 
-    .model-response p {
-      background-color: #2e2e2e; /* Color de fondo de la burbuja de respuesta */
-      padding: 1rem; /* Espaciado interno de la burbuja de respuesta */
-      border-radius: 8px; /* Bordes redondeados */
-      margin-left: 1rem; /* Agrega espacio entre el nombre y la burbuja de respuesta */
-    }
-    
+      }
+      .model-response p {
+        width:100%;
+      }
+      
     </style>
     <div class="chat-container">
       <div class="prompts">
@@ -160,51 +165,112 @@ class Conversation extends HTMLElement {
       `
   }
 
-  userPromt(string) {
-    const promptsContainer = this.shadow.querySelector('.prompts')
-    const promptContainer = document.createElement('div')
-    promptContainer.classList.add('prompt')
+  userPromt(prompt) {
+    const promptsContainer = this.shadow.querySelector('.prompts');
+    const promptContainer = document.createElement('div');
+    promptContainer.classList.add('prompt');
 
-    const userLogo = document.createElement('img')
-    userLogo.src = "./images/user-avatar.png"
-    userLogo.alt = "User Logo"
-    userLogo.classList = "user-logo"
-    promptContainer.appendChild(userLogo)
+    const user = document.createElement('div');
+    user.classList.add('user');
+    promptContainer.appendChild(user);
 
-    const userName = document.createElement('div')
-    userName.classList.add('user-name')
-    userName.textContent = "Tu"
-    promptContainer.appendChild(userName)
+    const userLogo = document.createElement('img');
+    userLogo.src = "./images/user-avatar.png";
+    userLogo.alt = "User Logo";
+    userLogo.classList = "user-logo";
+    user.appendChild(userLogo);
 
-    const userText = document.createElement('p')
-    userText.textContent = string
-    promptContainer.appendChild(userText)
+    const userName = document.createElement('div');
+    userName.classList.add('user-name');
+    const name = document.createElement('p');
+    name.textContent = "Tú";
+    user.appendChild(userName);
+    userName.appendChild(name);
+
+    const userPrompt = document.createElement('div');
+    userPrompt.classList.add('userPrompt');
+    const userText = document.createElement('p');
+    userText.textContent = prompt;
+    promptContainer.appendChild(userPrompt);
+    userPrompt.appendChild(userText);
 
     promptsContainer.appendChild(promptContainer);
-  }
+}
+
+  // userPromt(string) {
+  //   const promptsContainer = this.shadow.querySelector('.prompts');
+  //   const promptContainer = document.createElement('div');
+  //   promptContainer.classList.add('prompt');
+
+  //   const user = document.createElement('div');
+  //   user.classList.add('user');
+  //   user.appendChild(promptContainer);
+
+  //   const userLogo = document.createElement('img');
+  //   userLogo.src = "./images/user-avatar.png";
+  //   userLogo.alt = "User Logo";
+  //   userLogo.classList = "user-logo";
+  //   user.appendChild(userLogo);
+
+  //   const userName = document.createElement('div');
+  //   userName.classList.add('user-name');
+  //   userName.textContent = "Tu";
+  //   user.appendChild(userName);
+
+  //   const userText = document.createElement('p');
+  //   userText.textContent = string;
+  //   promptContainer.appendChild(userText);
+
+  //   promptsContainer.appendChild(promptContainer);
+  // }
 
   modelResponse() {
     const promptsContainer = this.shadow.querySelector('.prompts');
     const promptContainer = document.createElement('div');
     promptContainer.classList.add('model-response');
 
+    const modal = document.createElement('div');
+    modal.classList.add('model');
+    promptContainer.appendChild(modal);
+
     const modelLogo = document.createElement('img');
     modelLogo.src = "./images/chatgpt-icon.webp";
     modelLogo.alt = "Model Logo";
     modelLogo.classList = "model-logo";
-    promptContainer.appendChild(modelLogo);
+    modal.appendChild(modelLogo);
 
     const modelName = document.createElement('div');
     modelName.classList.add('model-name')
-    modelName.textContent = "ñatGPT";
-    promptContainer.appendChild(modelName);
+    modelName.textContent = "ChatGPT";
+    modal.appendChild(modelName);
 
+    const modelTextContainer = document.createElement('div');
+    modelTextContainer.classList.add('text-container');
     const modelText = document.createElement('p');
-    modelText.textContent = ("A MI ME GUSTA TU DESCENDENCIA ENTERAAAAAAAAAAAA, LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA");
     promptContainer.appendChild(modelText);
 
     promptsContainer.appendChild(promptContainer);
+    
+    let index = 0;
+    const texto = ("A MI ME GUSTA TU DESCENDENCIA ENTERAAAAAAAAAAAA, LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA DE LA MAMA");
+    const intervalo = setInterval(() => {
+      // Agrega el siguiente carácter al div
+      modelText.textContent += texto.charAt(index);
+      // promptsContainer.scrollTop = promptsContainer.scrollHeight;
+
+      // Incrementa el índice
+      index++;
+
+      // Si hemos alcanzado el final del texto, detén el intervalo
+      if (index === texto.length) {
+        clearInterval(intervalo);
+        const customEvent = new CustomEvent('hide-stop', {});
+        document.dispatchEvent(customEvent);
+      }
+    }, 1);
   }
+
+
 }
 
 customElements.define('conversation-component', Conversation);
