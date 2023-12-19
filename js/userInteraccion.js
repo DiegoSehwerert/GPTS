@@ -4,14 +4,35 @@ class UserInteraction extends HTMLElement {
 
     super()
     this.shadow = this.attachShadow({ mode: 'open' })
-    this.startChat = true
+    
+    //Declaramos startChat como una variable inicializada en true
+    this.startChat = true 
 
+    //escuchando start-new-chat y llamando a connectedCallback si se escucha
     document.addEventListener("start-new-chat", this.connectedCallback.bind(this));
+    document.addEventListener('responseState', this.handleResponseState.bind(this));
+  }
+
+  static get observedAttributes() {
+    return ['response-state'];
   }
 
   connectedCallback() {
     this.render();
   }
+
+  attributeChangedCallback (name, oldValue, newValue) {
+    if(name === 'response-state'){
+      if(newValue === "true"){
+        this.shadow.querySelector('.send-button').classList.remove('visible')
+        this.shadow.querySelector('.stop-button').classList.add('visible')
+      }else{
+        this.shadow.querySelector('.send-button').classList.add('visible')
+        this.shadow.querySelector('.stop-button').classList.remove('visible')
+      }
+    }
+  }
+
 
   render() {
 
@@ -27,19 +48,19 @@ class UserInteraction extends HTMLElement {
         width: 100%;
       }
       
-      .message-input .attach-button button{
+      .attach-button button{
         background-color: hsl(0, 0%, 100%, 0);
         border: none;
         border-radius: 0.5rem;
         cursor: pointer;
       }
       
-      .message-input .attach-button svg{
+      .attach-button svg{
         color: hsl(0, 0%, 100%);
         width: 1.3rem;
       }
       
-      .message-input form{
+      form{
         align-items: center;
         border: 1px solid hsl(0, 0%, 40%);
         border-radius: 1rem;
@@ -48,12 +69,12 @@ class UserInteraction extends HTMLElement {
         padding: 0.5rem;
       }
       
-      .message-input form .form-element{
+      .form-element{
         height: max-content;
         width: 90%
       }
       
-      .message-input form .form-element textarea{
+      .form-element textarea{
         background-color: hsl(235, 11%, 23%);
         border: none;
         color: hsl(0, 0%, 100%);
@@ -64,17 +85,27 @@ class UserInteraction extends HTMLElement {
         resize: none;
         width: 100%;
       }
-      
-      .message-input form .form-element textarea::placeholder{
+     
+      .form-element textarea::placeholder{
         color: hsl(0, 0%, 100%, 0.5);
         font-weight: 300;
       }
       
-      .message-input form .form-element textarea:focus{
+      .form-element textarea:focus{
         outline: none;
       }
-      
-      .message-input .send-button button{
+
+      .send-button{
+        display:none;
+        pointer-events: none;
+        cursor: not-allowed;
+      }
+
+      .send-button.visible{
+        display:block;
+      }
+ 
+      .send-button button{
         align-items: center;
         background-color: hsl(235, 7%, 31%);
         border: none;
@@ -82,24 +113,19 @@ class UserInteraction extends HTMLElement {
         display: flex;
         padding: 0.1rem 0.2rem;
       }
-
-      .send-button{
-        pointer-events: none;
-        cursor: not-allowed;
-      }
       
-      .message-input .send-button svg{
+      .send-button svg{
         color:hsl(0, 0%, 0%, 0.3);
         width: 1.3rem;
       }
       
-      .message-input .send-button.active button{
+      .send-button.active button{
         background-color: rgb(255, 255, 255);
         cursor: pointer;
         pointer-events: auto;
       }
       
-      .message-input .send-button.active svg{
+      .send-button.active svg{
         color:hsl(0, 0%, 0%);
       }
       
@@ -135,6 +161,33 @@ class UserInteraction extends HTMLElement {
         opacity: 1;
         visibility: visible;
       }
+
+
+      .stop-button {
+          align-items: center;
+          background-color: transparent;
+          border: 0.1rem solid hsl(0, 0%, 100%);
+          border-radius: 50%;
+          display: none;
+          height: 1rem;
+          justify-content: center;
+          padding: 0.3rem;
+          width: 1rem;
+        }
+
+        .stop-button.visible {
+          display: flex;
+        }
+
+        .stop-button button {
+          background-color: hsl(0, 0%, 100%);
+          border: none;
+          border-radius: 0;
+          cursor: pointer;
+          height: 0.75rem;
+          width: 0.25rem;
+        }
+
       </style>
       <section class="message-input">
         <form>
@@ -149,13 +202,17 @@ class UserInteraction extends HTMLElement {
           <div class="form-element">
             <textarea placeholder="Message ChatGPT..."></textarea>
           </div>
-          <div class="send-button">
-            <button disabled=true>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-white dark:text-black">
-                <path d="M7 11L12 6L17 11M12 18V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-              </svg>            
-              <span class="tooltiptext">Enviar mensaje</span>                  
-            </button>
+          <div class="interaction-button">
+            <div class="stop-button">
+              <button></button>
+            </div>
+            <div class="send-button visible">
+              <button disabled>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-white dark:text-black">
+                  <path d="M7 11L12 6L17 11M12 18V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>            
+                <span class="tooltiptext">Enviar mensaje</span>                  
+              </button>
           </div>
         </form>
       </section>
@@ -164,9 +221,12 @@ class UserInteraction extends HTMLElement {
     let textArea = this.shadow.querySelector(".form-element textarea");
     let sendButton = this.shadow.querySelector(".send-button");
     let button = this.shadow.querySelector(".send-button button");
+    let stopButton = this.shadow.querySelector('.stop-button button');
 
-    textArea.focus();
+    textArea.focus(); // le damos focus a textarea desde que se carga la pagina siempre podemos escribir
 
+    //si el valor del evento es "" le quitamos el active a sendButton y a button.disabled le damos true
+    //si el valor del evento es cualquier otra cosa que no sea "" se le añade active a sendButton y volvemos false button.disabled
     textArea.addEventListener("input", (event) => {
       if (event.target.value == "") {
         sendButton.classList.remove("active");
@@ -177,12 +237,16 @@ class UserInteraction extends HTMLElement {
       }
     });
 
-    sendButton.addEventListener("click", (event) => {
-      event.preventDefault();
+    //sendButton tiene un listener que cuando escuche el click se llame a si mismo y que previene su comportasmiento default
+    sendButton.addEventListener("click", (event) => { 
+      event.preventDefault(); 
       this.sendButton();
     });
 
-    textArea.addEventListener("keydown", (event) => {
+    //textArea tiene un listener que escucha keydown y se lo da a event
+    //en el condicional decalramos que si la tecla del evento es igual a enter y NO es la tecal del evento + la tecla shift
+    //primero se previene el comportamiento default y luego se lee si el boton esta activo(que pueda ser clickeable) para llamar a la funcion sendButton
+    textArea.addEventListener("keydown", (event) => { 
       if (event.key === "Enter" && !event.shiftKey) {
         event.preventDefault();
 
@@ -191,10 +255,19 @@ class UserInteraction extends HTMLElement {
         }
       }
     });
+
+    stopButton.addEventListener('click', (event) => {
+      event.preventDefault()
+      this.setAttribute('response-state', "false");
+      document.dispatchEvent(new CustomEvent('stopModelResponse'))
+    });
   }
 
+    //La funcion sendButton empieza con una condicion que limpia el mensaje de render y luego le da false a startChat
+    //Asi solo se limpia el texto la primera vez que le das al boton
+    //Dispachea un evento llamado new-prompt y pasa un detail del textarea.value
+    //Asi recogemos lo que ha escrito el usuario
   sendButton(){
-
     if (this.startChat){
       document.dispatchEvent(new CustomEvent('clean-chat'));
       this.startChat = false;
@@ -206,7 +279,9 @@ class UserInteraction extends HTMLElement {
       }
     }));
 
+    //Hacemos this render otra vez para limpiar lo que ha escrito el usuario
     this.render();
+    this.setAttribute('response-state', "true") 
   }
 }
 

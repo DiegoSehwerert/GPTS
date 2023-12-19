@@ -75,7 +75,7 @@ class Conversation extends HTMLElement {
         width:100%;
       }
       .userPrompt{
-        width: 94%;
+        width: 92%;
       }
       .userPrompt p {
        
@@ -197,33 +197,6 @@ class Conversation extends HTMLElement {
     promptsContainer.appendChild(promptContainer);
 }
 
-  // userPromt(string) {
-  //   const promptsContainer = this.shadow.querySelector('.prompts');
-  //   const promptContainer = document.createElement('div');
-  //   promptContainer.classList.add('prompt');
-
-  //   const user = document.createElement('div');
-  //   user.classList.add('user');
-  //   user.appendChild(promptContainer);
-
-  //   const userLogo = document.createElement('img');
-  //   userLogo.src = "./images/user-avatar.png";
-  //   userLogo.alt = "User Logo";
-  //   userLogo.classList = "user-logo";
-  //   user.appendChild(userLogo);
-
-  //   const userName = document.createElement('div');
-  //   userName.classList.add('user-name');
-  //   userName.textContent = "Tu";
-  //   user.appendChild(userName);
-
-  //   const userText = document.createElement('p');
-  //   userText.textContent = string;
-  //   promptContainer.appendChild(userText);
-
-  //   promptsContainer.appendChild(promptContainer);
-  // }
-
   modelResponse() {
     const promptsContainer = this.shadow.querySelector('.prompts');
     const promptContainer = document.createElement('div');
@@ -237,7 +210,7 @@ class Conversation extends HTMLElement {
     modelLogo.src = "./images/chatgpt-icon.webp";
     modelLogo.alt = "Model Logo";
     modelLogo.classList = "model-logo";
-    modal.appendChild(modelLogo);
+    modal.appendChild(modelLogo);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
 
     const modelName = document.createElement('div');
     modelName.classList.add('model-name')
@@ -252,7 +225,7 @@ class Conversation extends HTMLElement {
     promptsContainer.appendChild(promptContainer);
     
     let index = 0;
-    const texto = ("Mami yo te doy lo que tu quieras bailame en el tubo, suaaaaaveeeeeeeeeeeeeeeeeeee");
+    const texto = ("Baby yo te doy lo que tu quiera bailame en el tubo suaaaveeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
     const intervalo = setInterval(() => {
       // Agrega el siguiente carácter al div
       modelText.textContent += texto.charAt(index);
@@ -264,8 +237,7 @@ class Conversation extends HTMLElement {
       // Si hemos alcanzado el final del texto, detén el intervalo
       if (index === texto.length) {
         clearInterval(intervalo);
-        const customEvent = new CustomEvent('hide-stop', {});
-        document.dispatchEvent(customEvent);
+        document.dispatchEvent(new CustomEvent('hide-stop', {}));
       }
     }, 1);
   }
