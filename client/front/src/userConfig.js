@@ -1,22 +1,16 @@
 class UserConfig extends HTMLElement {
+  constructor () {
+    super()
 
+    this.shadow = this.attachShadow({ mode: 'open' })
+  }
 
-    constructor() {
+  connectedCallback () {
+    this.render()
+  }
 
-        super()
-
-        this.shadow = this.attachShadow({ mode: 'open' })
-
-    }
-
-
-    connectedCallback() {
-        this.render();
-    }
-
-    render() {
-
-      this.shadow.innerHTML =
+  render () {
+    this.shadow.innerHTML =
       `
       <style>
       .user{
@@ -67,8 +61,7 @@ class UserConfig extends HTMLElement {
       </div>
     </section>
       `
-    }
-     
+  }
 }
 
-customElements.define('user-config', UserConfig);
+customElements.define('user-config', UserConfig)

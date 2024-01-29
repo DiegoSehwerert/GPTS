@@ -1,19 +1,15 @@
 class AsideComponent extends HTMLElement {
+  constructor () {
+    super()
+    this.shadow = this.attachShadow({ mode: 'open' })
+  }
 
+  connectedCallback () {
+    this.render()
+  }
 
-    constructor() {
-        super()
-        this.shadow = this.attachShadow({ mode: 'open' })
-    }
-
-
-    connectedCallback() {
-        this.render();
-    }
-
-    render() {
-
-      this.shadow.innerHTML =
+  render () {
+    this.shadow.innerHTML =
       `<style>
         .aside{
           background-color: black;
@@ -105,23 +101,22 @@ class AsideComponent extends HTMLElement {
       </div>
       `
 
-      let hideButton = this.shadow.querySelector(".hide-button");
-      let aside = this.shadow.querySelector(".aside");
-      let newChat = this.shadow.querySelector(".new-chat-button");
+    const hideButton = this.shadow.querySelector('.hide-button')
+    const aside = this.shadow.querySelector('.aside')
+    const newChat = this.shadow.querySelector('.new-chat-button')
 
-      hideButton.addEventListener("click", () => {
-        hideButton.classList.toggle("active");
-        aside.classList.toggle("active");
-        newChat.classList.toggle("active");
-      })
+    hideButton.addEventListener('click', () => {
+      hideButton.classList.toggle('active')
+      aside.classList.toggle('active')
+      newChat.classList.toggle('active')
+    })
 
-      newChat.addEventListener("click",(event) => {
-        event.preventDefault();
-        const customEvent = new CustomEvent('start-new-chat');
-        document.dispatchEvent(customEvent);
-      })
-    }
-    
+    newChat.addEventListener('click', (event) => {
+      event.preventDefault()
+      const customEvent = new CustomEvent('start-new-chat')
+      document.dispatchEvent(customEvent)
+    })
+  }
 }
 
-customElements.define('aside-component', AsideComponent);
+customElements.define('aside-component', AsideComponent)

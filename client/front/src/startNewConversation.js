@@ -1,22 +1,16 @@
 class StartConversation extends HTMLElement {
+  constructor () {
+    super()
 
+    this.shadow = this.attachShadow({ mode: 'open' })
+  }
 
-    constructor() {
+  connectedCallback () {
+    this.render()
+  }
 
-        super()
-
-        this.shadow = this.attachShadow({ mode: 'open' })
-
-    }
-
-
-    connectedCallback() {
-        this.render();
-    }
-
-    render() {
-
-      this.shadow.innerHTML =
+  render () {
+    this.shadow.innerHTML =
       `
       <style>
       .new-conversations{
@@ -126,14 +120,13 @@ class StartConversation extends HTMLElement {
       </div>
     </section>
       `
-      const newChatButton = this.shadow.querySelector('.new-conversation');
-      newChatButton.addEventListener("click",(event) => {
-        event.preventDefault();
-        const customEvent = new CustomEvent('start-new-chat');
-        document.dispatchEvent(customEvent);
-      })
-    }
-     
+    const newChatButton = this.shadow.querySelector('.new-conversation')
+    newChatButton.addEventListener('click', (event) => {
+      event.preventDefault()
+      const customEvent = new CustomEvent('start-new-chat')
+      document.dispatchEvent(customEvent)
+    })
+  }
 }
 
-customElements.define('start-conversation-component', StartConversation);
+customElements.define('start-conversation-component', StartConversation)

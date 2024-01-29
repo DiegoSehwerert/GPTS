@@ -1,43 +1,39 @@
 class UserInteraction extends HTMLElement {
-
-  constructor() {
-
+  constructor () {
     super()
     this.shadow = this.attachShadow({ mode: 'open' })
-    
-    //Declaramos startChat como una variable inicializada en true
-    this.startChat = true 
 
-    //escuchando start-new-chat y llamando a connectedCallback si se escucha
-    document.addEventListener("start-new-chat", this.connectedCallback.bind(this));
-    document.addEventListener('responseState', this.handleResponseState.bind(this));
+    // Declaramos startChat como una variable inicializada en true
+    this.startChat = true
+
+    // escuchando start-new-chat y llamando a connectedCallback si se escucha
+    document.addEventListener('start-new-chat', this.connectedCallback.bind(this))
+    document.addEventListener('responseState', this.handleResponseState.bind(this))
   }
 
-  static get observedAttributes() {
-    return ['response-state'];
+  static get observedAttributes () {
+    return ['response-state']
   }
 
-  connectedCallback() {
-    this.render();
+  connectedCallback () {
+    this.render()
   }
 
   attributeChangedCallback (name, oldValue, newValue) {
-    if(name === 'response-state'){
-      if(newValue === "true"){
+    if (name === 'response-state') {
+      if (newValue === 'true') {
         this.shadow.querySelector('.send-button').classList.remove('visible')
         this.shadow.querySelector('.stop-button').classList.add('visible')
-      }else{
+      } else {
         this.shadow.querySelector('.send-button').classList.add('visible')
         this.shadow.querySelector('.stop-button').classList.remove('visible')
       }
     }
   }
 
-
-  render() {
-
+  render () {
     this.shadow.innerHTML =
-      /*Html*/`
+      /* Html */`
       <style>
 
       :host{
@@ -217,72 +213,72 @@ class UserInteraction extends HTMLElement {
         </form>
       </section>
       `
-    
-    let textArea = this.shadow.querySelector(".form-element textarea");
-    let sendButton = this.shadow.querySelector(".send-button");
-    let button = this.shadow.querySelector(".send-button button");
-    let stopButton = this.shadow.querySelector('.stop-button button');
 
-    textArea.focus(); // le damos focus a textarea desde que se carga la pagina siempre podemos escribir
+    const textArea = this.shadow.querySelector('.form-element textarea')
+    const sendButton = this.shadow.querySelector('.send-button')
+    const button = this.shadow.querySelector('.send-button button')
+    const stopButton = this.shadow.querySelector('.stop-button button')
 
-    //si el valor del evento es "" le quitamos el active a sendButton y a button.disabled le damos true
-    //si el valor del evento es cualquier otra cosa que no sea "" se le añade active a sendButton y volvemos false button.disabled
-    textArea.addEventListener("input", (event) => {
-      if (event.target.value == "") {
-        sendButton.classList.remove("active");
-        button.disabled = true;
+    textArea.focus() // le damos focus a textarea desde que se carga la pagina siempre podemos escribir
+
+    // si el valor del evento es "" le quitamos el active a sendButton y a button.disabled le damos true
+    // si el valor del evento es cualquier otra cosa que no sea "" se le añade active a sendButton y volvemos false button.disabled
+    textArea.addEventListener('input', (event) => {
+      if (event.target.value === '') {
+        sendButton.classList.remove('active')
+        button.disabled = true
       } else {
-        sendButton.classList.add("active");
-        button.disabled = false;
+        sendButton.classList.add('active')
+        button.disabled = false
       }
-    });
+    })
 
-    //sendButton tiene un listener que cuando escuche el click se llame a si mismo y que previene su comportasmiento default
-    sendButton.addEventListener("click", (event) => { 
-      event.preventDefault(); 
-      this.sendButton();
-    });
+    // sendButton tiene un listener que cuando escuche el click se llame a si mismo y que previene su comportasmiento default
+    sendButton.addEventListener('click', (event) => {
+      event.preventDefault()
+      this.sendButton()
+    })
 
-    //textArea tiene un listener que escucha keydown y se lo da a event
-    //en el condicional decalramos que si la tecla del evento es igual a enter y NO es la tecal del evento + la tecla shift
-    //primero se previene el comportamiento default y luego se lee si el boton esta activo(que pueda ser clickeable) para llamar a la funcion sendButton
-    textArea.addEventListener("keydown", (event) => { 
-      if (event.key === "Enter" && !event.shiftKey) {
-        event.preventDefault();
+    // textArea tiene un listener que escucha keydown y se lo da a event
+    // en el condicional decalramos que si la tecla del evento es igual a enter y NO es la tecal del evento + la tecla shift
+    // primero se previene el comportamiento default y luego se lee si el boton esta activo(que pueda ser clickeable) para llamar a la funcion sendButton
+    textArea.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault()
 
-        if (sendButton.classList.contains('active')){
-          this.sendButton();
+        if (sendButton.classList.contains('active')) {
+          this.sendButton()
         }
       }
-    });
+    })
 
     stopButton.addEventListener('click', (event) => {
       event.preventDefault()
-      this.setAttribute('response-state', "false");
+      this.setAttribute('response-state', 'false')
       document.dispatchEvent(new CustomEvent('stopModelResponse'))
-    });
+    })
   }
 
-    //La funcion sendButton empieza con una condicion que limpia el mensaje de render y luego le da false a startChat
-    //Asi solo se limpia el texto la primera vez que le das al boton
-    //Dispachea un evento llamado new-prompt y pasa un detail del textarea.value
-    //Asi recogemos lo que ha escrito el usuario
-  sendButton(){
-    if (this.startChat){
-      document.dispatchEvent(new CustomEvent('clean-chat'));
-      this.startChat = false;
+  // La funcion sendButton empieza con una condicion que limpia el mensaje de render y luego le da false a startChat
+  // Asi solo se limpia el texto la primera vez que le das al boton
+  // Dispachea un evento llamado new-prompt y pasa un detail del textarea.value
+  // Asi recogemos lo que ha escrito el usuario
+  sendButton () {
+    if (this.startChat) {
+      document.dispatchEvent(new CustomEvent('clean-chat'))
+      this.startChat = false
     }
 
     document.dispatchEvent(new CustomEvent('new-prompt', {
       detail: {
-        prompt: this.shadow.querySelector("textarea").value
+        prompt: this.shadow.querySelector('textarea').value
       }
-    }));
+    }))
 
-    //Hacemos this render otra vez para limpiar lo que ha escrito el usuario
-    this.render();
-    this.setAttribute('response-state', "true") 
+    // Hacemos this render otra vez para limpiar lo que ha escrito el usuario
+    this.render()
+    this.setAttribute('response-state', 'true')
   }
 }
 
-customElements.define('user-interaction-component', UserInteraction);
+customElements.define('user-interaction-component', UserInteraction)

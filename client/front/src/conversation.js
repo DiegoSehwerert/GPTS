@@ -1,33 +1,28 @@
 class Conversation extends HTMLElement {
-
-
-  constructor() {
-
+  constructor () {
     super()
 
     this.shadow = this.attachShadow({ mode: 'open' })
 
-    document.addEventListener("clean-chat", this.handleCleanChat.bind(this));
+    document.addEventListener('clean-chat', this.handleCleanChat.bind(this))
 
-    document.addEventListener("start-new-chat", this.connectedCallback.bind(this));
+    document.addEventListener('start-new-chat', this.connectedCallback.bind(this))
 
-    document.addEventListener("new-prompt", this.handleNewPrompt.bind(this));
+    document.addEventListener('new-prompt', this.handleNewPrompt.bind(this))
   }
 
-  connectedCallback() {
-    this.render();
+  connectedCallback () {
+    this.render()
   }
 
-  handleNewPrompt = event =>{
-    this.userPromt(event.detail.prompt);
-    this.modelResponse();
+  handleNewPrompt = event => {
+    this.userPromt(event.detail.prompt)
+    this.modelResponse()
   }
 
-  
-
-  handleCleanChat(){
-    this.shadow.innerHTML = 
-    /*html*/`
+  handleCleanChat () {
+    this.shadow.innerHTML =
+    /* html */`
     <style>
 
       :host{
@@ -106,10 +101,9 @@ class Conversation extends HTMLElement {
     `
   }
 
-  render() {
-
+  render () {
     this.shadow.innerHTML =
-      /*html*/`
+      /* html */`
       <style>
       .conversation{
         align-items: center;
@@ -165,84 +159,82 @@ class Conversation extends HTMLElement {
       `
   }
 
-  userPromt(prompt) {
-    const promptsContainer = this.shadow.querySelector('.prompts');
-    const promptContainer = document.createElement('div');
-    promptContainer.classList.add('prompt');
+  userPromt (prompt) {
+    const promptsContainer = this.shadow.querySelector('.prompts')
+    const promptContainer = document.createElement('div')
+    promptContainer.classList.add('prompt')
 
-    const user = document.createElement('div');
-    user.classList.add('user');
-    promptContainer.appendChild(user);
+    const user = document.createElement('div')
+    user.classList.add('user')
+    promptContainer.appendChild(user)
 
-    const userLogo = document.createElement('img');
-    userLogo.src = "./images/user-avatar.png";
-    userLogo.alt = "User Logo";
-    userLogo.classList = "user-logo";
-    user.appendChild(userLogo);
+    const userLogo = document.createElement('img')
+    userLogo.src = './images/user-avatar.png'
+    userLogo.alt = 'User Logo'
+    userLogo.classList = 'user-logo'
+    user.appendChild(userLogo)
 
-    const userName = document.createElement('div');
-    userName.classList.add('user-name');
-    const name = document.createElement('p');
-    name.textContent = "Tú";
-    user.appendChild(userName);
-    userName.appendChild(name);
+    const userName = document.createElement('div')
+    userName.classList.add('user-name')
+    const name = document.createElement('p')
+    name.textContent = 'Tú'
+    user.appendChild(userName)
+    userName.appendChild(name)
 
-    const userPrompt = document.createElement('div');
-    userPrompt.classList.add('userPrompt');
-    const userText = document.createElement('p');
-    userText.textContent = prompt;
-    promptContainer.appendChild(userPrompt);
-    userPrompt.appendChild(userText);
+    const userPrompt = document.createElement('div')
+    userPrompt.classList.add('userPrompt')
+    const userText = document.createElement('p')
+    userText.textContent = prompt
+    promptContainer.appendChild(userPrompt)
+    userPrompt.appendChild(userText)
 
-    promptsContainer.appendChild(promptContainer);
-}
+    promptsContainer.appendChild(promptContainer)
+  }
 
-  modelResponse() {
-    const promptsContainer = this.shadow.querySelector('.prompts');
-    const promptContainer = document.createElement('div');
-    promptContainer.classList.add('model-response');
+  modelResponse () {
+    const promptsContainer = this.shadow.querySelector('.prompts')
+    const promptContainer = document.createElement('div')
+    promptContainer.classList.add('model-response')
 
-    const modal = document.createElement('div');
-    modal.classList.add('model');
-    promptContainer.appendChild(modal);
+    const modal = document.createElement('div')
+    modal.classList.add('model')
+    promptContainer.appendChild(modal)
 
-    const modelLogo = document.createElement('img');
-    modelLogo.src = "./images/chatgpt-icon.webp";
-    modelLogo.alt = "Model Logo";
-    modelLogo.classList = "model-logo";
-    modal.appendChild(modelLogo);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+    const modelLogo = document.createElement('img')
+    modelLogo.src = './images/chatgpt-icon.webp'
+    modelLogo.alt = 'Model Logo'
+    modelLogo.classList = 'model-logo'
+    modal.appendChild(modelLogo)
 
-    const modelName = document.createElement('div');
+    const modelName = document.createElement('div')
     modelName.classList.add('model-name')
-    modelName.textContent = "ChatGPT";
-    modal.appendChild(modelName);
+    modelName.textContent = 'ChatGPT'
+    modal.appendChild(modelName)
 
-    const modelTextContainer = document.createElement('div');
-    modelTextContainer.classList.add('text-container');
-    const modelText = document.createElement('p');
-    promptContainer.appendChild(modelText);
+    const modelTextContainer = document.createElement('div')
+    modelTextContainer.classList.add('text-container')
+    const modelText = document.createElement('p')
+    promptContainer.appendChild(modelText)
 
-    promptsContainer.appendChild(promptContainer);
-    
-    let index = 0;
-    const texto = ("Baby yo te doy lo que tu quiera bailame en el tubo suaaaveeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+    promptsContainer.appendChild(promptContainer)
+
+    let index = 0
+    const texto = ('Baby yo te doy lo que tu quiera bailame en el tubo suaaaveeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
     const intervalo = setInterval(() => {
       // Agrega el siguiente carácter al div
-      modelText.textContent += texto.charAt(index);
+      modelText.textContent += texto.charAt(index)
       // promptsContainer.scrollTop = promptsContainer.scrollHeight;
 
       // Incrementa el índice
-      index++;
+      index++
 
       // Si hemos alcanzado el final del texto, detén el intervalo
       if (index === texto.length) {
-        clearInterval(intervalo);
-        document.dispatchEvent(new CustomEvent('hide-stop', {}));
+        clearInterval(intervalo)
+        document.dispatchEvent(new CustomEvent('hide-stop', {}))
       }
-    }, 1);
+    }, 1)
   }
-
-
 }
 
-customElements.define('conversation-component', Conversation);
+customElements.define('conversation-component', Conversation)

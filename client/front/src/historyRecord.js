@@ -1,22 +1,16 @@
 class Hystory extends HTMLElement {
+  constructor () {
+    super()
 
+    this.shadow = this.attachShadow({ mode: 'open' })
+  }
 
-    constructor() {
+  connectedCallback () {
+    this.render()
+  }
 
-        super()
-
-        this.shadow = this.attachShadow({ mode: 'open' })
-
-    }
-
-
-    connectedCallback() {
-        this.render();
-    }
-
-    render() {
-
-      this.shadow.innerHTML =
+  render () {
+    this.shadow.innerHTML =
       `
       <style>
       .history{
@@ -178,8 +172,7 @@ class Hystory extends HTMLElement {
         </article>
       </section>
       `
-    }
-     
+  }
 }
 
-customElements.define('hystory-component', Hystory);
+customElements.define('hystory-component', Hystory)
